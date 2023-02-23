@@ -11,6 +11,7 @@ void GameScene::Initialize() {
 	player_ = new Player();
 	enemy_ = new Enemy();
 
+	enemy_->SetPlayer(player_);
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
@@ -21,17 +22,23 @@ void GameScene::Initialize() {
 	textureHandlePlayer_ = TextureManager::Load("blocktest.png");
 
 	modelEnemy_ = Model::Create();
-	textureHandleEnemy_ = TextureManager::Load("blocktest.png");
+	textureHandleEnemy_ = TextureManager::Load("blocktest2.png");
 
 	player_->Initialize(modelPlayer_, textureHandlePlayer_);
 	enemy_->Initialize(modelEnemy_, textureHandleEnemy_);
 
+	viewProjection_.target = { 0.0f,0.0f,10.0f };
+	viewProjection_.eye = { 0.0f,0.0f,-25.0f };
+
 	viewProjection_.Initialize();
+
 }
 
 void GameScene::Update() {
 	player_->Update(viewProjection_);
 	enemy_->Update();
+
+	CheckCollision();
 
 	viewProjection_.UpdateMatrix();
 }
@@ -85,4 +92,56 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::CheckCollision()
+{
+	EenmyBulletPlayer();
+	PlayerBulletEnmey();
+}
+
+void GameScene::EenmyBulletPlayer()
+{
+	Vector3 posA, posB;
+
+	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetBullets();
+
+	posA = player_->GetWorldPosition();
+
+	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+		posB = bullet->GetWorldPosition();
+
+		if (
+			(posA.x - posB.x) * (posA.x - posB.x) +
+			(posA.y - posB.y) * (posA.y - posB.y) +
+			(posA.z - posB.z) * (posA.z - posB.z)
+			<= (1.0f + 1.0f) * (1.0f + 1.0f)
+			) {
+			bullet->Collision();
+			player_->Collision();
+		}
+	}
+}
+
+void GameScene::PlayerBulletEnmey()
+{
+	Vector3 posA, posB;
+
+	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
+
+	posA = enemy_->GetWorldPosition();
+
+	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
+		posB = bullet->GetWorldPosition();
+
+		if (
+			(posA.x - posB.x) * (posA.x - posB.x) +
+			(posA.y - posB.y) * (posA.y - posB.y) +
+			(posA.z - posB.z) * (posA.z - posB.z)
+			<= (4.0f + 1.0f) * (2.0f + 1.0f)
+			) {
+			bullet->Collision();
+			enemy_->Collision();
+		}
+	}
 }

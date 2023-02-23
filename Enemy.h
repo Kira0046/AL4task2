@@ -9,6 +9,10 @@
 #include "Input.h"
 #include "Audio.h"
 
+#include "EnemyBullet.h"
+
+class Player;
+
 class Enemy
 {
 public:
@@ -18,9 +22,26 @@ public:
 
 	void Draw(ViewProjection& viewProjection);
 
+	void Shoot();
+
+	void SetPlayer(Player* player) {
+		player_ = player;
+	}
+
+	Vector3 GetWorldPosition();
+
+	void Collision();
+
+	void ReInitialize();
+
+	const std::list<std::unique_ptr<EnemyBullet>>& GetBullets() { return bullets_; }
 
 private:
+	Player* player_ = nullptr;
+
 	Model* model_ = nullptr;
+
+
 
 	Input* input_ = nullptr;
 
@@ -28,8 +49,21 @@ private:
 
 	Audio* audio_ = nullptr;
 
+	std::list<std::unique_ptr<EnemyBullet>> bullets_;
+
 private:
 	WorldTransform worldTransform_;
 
 	uint32_t textureHandle_ = 0;
+
+	float shootSecond = 1.5;
+
+	float shootTime = shootSecond * 60;
+
+	int health = 30;
+
+	Vector3 velocity;
+	Vector3 velocity2;
+	Vector3 velocity3;
+	Vector3 velocity4;
 };

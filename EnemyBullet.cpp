@@ -1,10 +1,10 @@
-#include "PlayerBullet.h"
+#include "EnemyBullet.h"
 #include <cassert>
 
 #include "Procession.h"
 using namespace MathUtility;
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity)
+void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity)
 {
 	assert(model);
 
@@ -14,6 +14,8 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	textureHandle_ = TextureManager::Load("blocktest.png");
 	worldTransform_.Initialize();
 
+	worldTransform_.scale_ = { 0.5f,0.5f,0.5f };
+
 	worldTransform_.matWorld_ = Mat_Identity();
 	worldTransform_.matWorld_ = MatWorld(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 
@@ -22,7 +24,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	worldTransform_.translation_ = position;
 }
 
-void PlayerBullet::Update()
+void EnemyBullet::Update()
 {
 	if (--deathTimer_ <= 0) {
 		isDead_ = true;
@@ -36,12 +38,12 @@ void PlayerBullet::Update()
 	worldTransform_.TransferMatrix();
 }
 
-void PlayerBullet::Draw(const ViewProjection& viewProjection)
+void EnemyBullet::Draw(const ViewProjection& viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
-Vector3 PlayerBullet::GetWorldPosition()
+Vector3 EnemyBullet::GetWorldPosition()
 {
 	Vector3 worldPos;
 
@@ -52,7 +54,7 @@ Vector3 PlayerBullet::GetWorldPosition()
 	return worldPos;
 }
 
-void PlayerBullet::Collision()
+void EnemyBullet::Collision()
 {
 	isDead_ = true;
 }

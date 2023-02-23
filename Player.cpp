@@ -17,7 +17,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 
 	worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
 	worldTransform_.rotation_ = { 0.0f,0.0f,0.0f };
-	worldTransform_.translation_ = { 0.0f,0.0f,0.0f };
+	worldTransform_.translation_ = { 0.0f,0.0f,-8.0f };
 
 	worldTransform_.Initialize();
 
@@ -174,4 +174,25 @@ void Player::Shoot()
 	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
 	bullets_.push_back(std::move(newBullet));
+}
+
+void Player::Collision()
+{
+	health -= 1;
+}
+
+void Player::ReInitialize()
+{
+	int health = 5;
+}
+
+Vector3 Player::GetWorldPosition()
+{
+	Vector3 worldPos;
+
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
+
+	return worldPos;
 }

@@ -16,6 +16,10 @@ public:
 		return isDead_;
 	}
 
+	Vector3 GetWorldPosition();
+
+	void Collision();
+
 private:
 	WorldTransform worldTransform_;
 

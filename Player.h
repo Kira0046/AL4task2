@@ -25,6 +25,14 @@ public:
 
 	void Shoot();
 
+	void Collision();
+
+	void ReInitialize();
+
+	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
+
+	Vector3 GetWorldPosition();
+
 private:
 	Model* model_ = nullptr;
 	
@@ -41,4 +49,5 @@ private:
 
 	uint32_t textureHandle_ = 0;
 	
+	int health = 5;
 };
