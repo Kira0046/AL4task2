@@ -98,5 +98,14 @@ class GameScene {
 	Model* modelEnemy_ = nullptr;
 	uint32_t textureHandleEnemy_ = 0;
 
+	Sprite* spriteTitle_ = nullptr;
+	uint32_t textureHandleTitle_ = 0;
+
+	Sprite* spriteClear_ = nullptr;
+	uint32_t textureHandleClear_ = 0;
+
+	Sprite* spriteOver_ = nullptr;
+	uint32_t textureHandleOver_ = 0;
+
 	int scene_ = 0;
 };

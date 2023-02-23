@@ -31,6 +31,8 @@ public:
 
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
 
+	int GetHealth() { return health; }
+
 	Vector3 GetWorldPosition();
 
 private:

@@ -36,6 +36,8 @@ public:
 
 	const std::list<std::unique_ptr<EnemyBullet>>& GetBullets() { return bullets_; }
 
+	int GetHealth() { return health; }
+
 private:
 	Player* player_ = nullptr;
 

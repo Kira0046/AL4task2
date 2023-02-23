@@ -5,7 +5,10 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+	SafeDelete(player_);
+	SafeDelete(enemy_);
+}
 
 void GameScene::Initialize() {
 	player_ = new Player();
@@ -17,6 +20,15 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
+
+	textureHandleTitle_ = TextureManager::Load("title.png");
+	spriteTitle_ = Sprite::Create(textureHandleTitle_, { 0,0 });
+	
+	textureHandleClear_ = TextureManager::Load("clear.png");
+	spriteClear_ = Sprite::Create(textureHandleClear_, { 0,0 });
+
+	textureHandleOver_ = TextureManager::Load("over.png");
+	spriteOver_ = Sprite::Create(textureHandleOver_, { 0,0 });
 
 	modelPlayer_ = Model::Create();
 	textureHandlePlayer_ = TextureManager::Load("blocktest.png");
@@ -35,12 +47,23 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	player_->Update(viewProjection_);
-	enemy_->Update();
 
-	CheckCollision();
-
-	viewProjection_.UpdateMatrix();
+	switch (scene_)
+	{
+	case 0:
+		GameTitleUpdate();
+		break;
+	case 1:
+		GamePlayUpdate();
+		break;
+	case 2:
+		GameClearUpdate();
+		break;
+	case 3:
+		GameOverUpdate();
+		break;
+	}
+	
 }
 
 void GameScene::Draw() {
@@ -56,6 +79,22 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
+	switch (scene_)
+	{
+	case 0:
+		GameTitleDraw2D();
+		break;
+	case 1:
+		GamePlayDraw2D();
+		break;
+	case 2:
+		GameClearDraw2D();
+		break;
+	case 3:
+		GameOverDraw2D();
+		break;
+	}
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -70,8 +109,22 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	
-	player_->Draw(viewProjection_);
-	enemy_->Draw(viewProjection_);
+	switch (scene_)
+	{
+	case 0:
+		GameTitleDraw3D();
+		break;
+	case 1:
+		GamePlayDraw3D();
+		break;
+	case 2:
+		GameClearDraw3D();
+		break;
+	case 3:
+		GameOverDraw3D();
+		break;
+	}
+
 	
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -144,4 +197,89 @@ void GameScene::PlayerBulletEnmey()
 			enemy_->Collision();
 		}
 	}
+}
+
+
+/// <summary>
+/// 更新
+/// </summary>
+void GameScene::GameTitleUpdate()
+{
+	if (input_->TriggerKey(DIK_SPACE)) {
+		player_->ReInitialize();
+		enemy_->ReInitialize();
+		scene_ = 1;
+	}
+}
+
+void GameScene::GamePlayUpdate()
+{
+	player_->Update(viewProjection_);
+	enemy_->Update();
+
+	CheckCollision();
+
+	if (enemy_->GetHealth() < 0) {
+		scene_ = 2;
+	}
+
+	if (player_->GetHealth() < 0) {
+		scene_ = 3;
+	}
+
+	viewProjection_.UpdateMatrix();
+}
+
+void GameScene::GameClearUpdate()
+{
+}
+
+void GameScene::GameOverUpdate()
+{
+}
+
+
+/// <summary>
+/// 2D描画
+/// </summary>
+void GameScene::GameTitleDraw2D()
+{
+	spriteTitle_->Draw();
+}
+
+void GameScene::GamePlayDraw2D()
+{
+}
+
+void GameScene::GameClearDraw2D()
+{
+	spriteClear_->Draw();
+}
+
+void GameScene::GameOverDraw2D()
+{
+	spriteOver_->Draw();
+}
+
+
+/// <summary>
+/// 3D描画
+/// </summary>
+void GameScene::GameTitleDraw3D()
+{
+}
+
+void GameScene::GamePlayDraw3D()
+{
+	player_->Draw(viewProjection_);
+	enemy_->Draw(viewProjection_);
+
+}
+
+void GameScene::GameClearDraw3D()
+{
+}
+
+void GameScene::GameOverDraw3D()
+{
 }
