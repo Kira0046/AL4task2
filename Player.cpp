@@ -183,7 +183,7 @@ void Player::Collision()
 
 void Player::ReInitialize()
 {
-	int health = 5;
+	health = 5;
 }
 
 Vector3 Player::GetWorldPosition()

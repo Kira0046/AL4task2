@@ -60,6 +60,7 @@ void Enemy::Draw(ViewProjection& viewProjection)
 	
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
 		bullet->Draw(viewProjection);
+		bullet.release();
 	}
 }
 
@@ -166,5 +167,5 @@ void Enemy::Collision()
 
 void Enemy::ReInitialize()
 {
-	int health = 30;
+	health = 30;
 }
