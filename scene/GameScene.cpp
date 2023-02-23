@@ -232,10 +232,16 @@ void GameScene::GamePlayUpdate()
 
 void GameScene::GameClearUpdate()
 {
+	if (input_->TriggerKey(DIK_SPACE)) {
+		scene_ = 0;
+	}
 }
 
 void GameScene::GameOverUpdate()
 {
+	if (input_->TriggerKey(DIK_SPACE)) {
+		scene_ = 0;
+	}
 }
 
 
